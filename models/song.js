@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let SongSchema = new Schema({
-    id:{type:String, required: true},
-    name:{type:String, required: true, max:30},
+    //id:{type:String, required: true},
+    title:{type:String, required: true, max:30},
+    artist:{type:String, required: true}
+    
 
 })
 
