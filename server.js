@@ -6,13 +6,20 @@ const bodyParser = require('body-parser');
 //initialize
 const app = express();
 
+//for hashing passwords
+const bcrypt = require('bcrypt');
+
 //connect mongoose
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://root:root123@ds341557.mlab.com:41557/lab5',{useNewUrlParser:true,useUnifiedTopology:true});
 
 //Model Schemas
-var Song = require("./models/song");
-var User = require("./models/user");
+var Song = require("./app/models/song");
+var User = require("./app/models/user");
+
+//constant for salt
+const roundOfSalt = 10;
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -59,7 +66,7 @@ router.route('/login')
                 return res.send({message: "Account is invalid"}); 
             }
             //if the password from the body matches the password in DB of the correct email
-            if(objectFound.password == password){
+            if(bcrypt.compareSync(password,objectFound.password)){
                 return res.send({message: "Logged in successful!"});
             }
             else //incorrect password
@@ -73,12 +80,11 @@ router.route('/login')
 router.route('/newUser')
     .post(function(req,res){
         var email = req.body.email;
-        var password = req.body.password;
 
         var user = new User();
         
-        if(validateEmail(email,password)!= ""){
-            return res.send(validateEmail(email,password));
+        if(validateEmail(email,req.body.password)!= ""){
+            return res.send(validateEmail(email,req.body.password));
         }
 
         User.findOne({email: email},function(err,objectFound){
@@ -88,7 +94,14 @@ router.route('/newUser')
             //when the acclunt does not exist in the db so it's valid for new users
             if (objectFound === null){
                 user.email = email;
+
+                //hash the password 
+                //for hashing the password, done synchronously
+                var salt = bcrypt.genSaltSync(roundOfSalt);
+                var password = bcrypt.hashSync(req.body.password, salt);
+
                 user.password = password;
+
 
                 user.save(function(err){
                     if(err){
