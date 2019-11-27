@@ -71,8 +71,8 @@ router.route('/login')
 
         //When user didn't enter anything
         //return is used so it doesn't duplicate send
-        if(emptySubmission(email,password)!= ""){
-            return res.send(emptySubmission(email,password));
+        if(accountInfo(email,password)!= ""){
+            return res.send(accountInfo(email,password));
         }
 
         
@@ -88,6 +88,12 @@ router.route('/login')
                 verifyEmail(objectFound,req.get('host'));
                 return res.send({message: "Verification neeeded. Email resent"})
             }
+
+            //if the account is deactivated
+            if(!objectFound.activation){
+                return res.send({message:"Account is deactivated. Contact the store manager"});
+            }
+
             //if the password from the body matches the hashed password in DB for the correct email
             if(bcrypt.compareSync(password,objectFound.password)){
                 return res.send({message: "Logged in successfully!"});
@@ -107,8 +113,8 @@ router.route('/newUser')
 
         var user = new User();
         
-        if(emptySubmission(email,req.body.password)!= ""){
-            return res.send(emptySubmission(email,req.body.password));
+        if(accountInfo(email,req.body.password)!= ""){
+            return res.send(accountInfo(email,req.body.password));
         }
 
         User.findOne({email: email},function(err,objectFound){
@@ -181,18 +187,30 @@ router.route('/verify/:verificationCode')
 
 
 //if the input is not given for the id and password
-function emptySubmission(email,password){
+function accountInfo(email,password){
     var message = "";
-        if (email ==="" && password ===""){
-            message = {message:"Please enter your account information"};
-        }
-        if(email ===""){
-            
-            message = {message: "Please Enter your email"};
-        }
-        if(password ===""){
-            message = {message:"Please Enter your Password"};
-        }
+    //both email and password are empty
+    if (email ==="" && password ===""){
+        message = {message:"Please enter your account information"};
+    }
+    //empty email
+    if(email ===""){
+        
+        message = {message: "Please Enter your email"};
+    }
+    //empty password
+    if(password ===""){
+        message = {message:"Please Enter your Password"};
+    }
+
+    //for invalid email format
+    var emailVerify = /[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}/;
+
+    var emailTest = emailVerify.test(email);
+    if(!emailTest){
+        message = {message: "Invalid email"};
+    }
+
     return message;
 }
 

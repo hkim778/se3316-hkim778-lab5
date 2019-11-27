@@ -7,7 +7,7 @@ let UserSchema = new Schema({
     password:   String,
     emailVerification: {type:Boolean, default:false},
     verificationCode: String,
-    activation: Boolean, // if it's deactivated or not
+    activation: {type:Boolean, default:true}, // if it's deactivated or not
     
 
 })
