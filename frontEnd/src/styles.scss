@@ -14,6 +14,8 @@ body {
     margin: 0 auto;
 }
 
+
+
 header {
     background: $primary;
     padding: 1em 0;
@@ -43,6 +45,21 @@ header {
             }
         }
     }
+    
+    
+}
+span{
+    margin-left: 0.3em;
+}
+input{
+    font-family: 'Nunito', 'sans-serif';
+    font-size: 15px;
+}
+button{
+    margin-left:1em;
+    height: 2em;
+    font-family: 'Nunito', 'sans-serif';
+    font-size:14px;
 }
 
 h1 {

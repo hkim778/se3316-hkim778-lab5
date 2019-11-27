@@ -1,1 +1,9 @@
-<p>Log In</p>
+<h1>Log In</h1>
+
+ID: <input [(ngModel)]='email'>
+PW: <input [(ngModel)]='password' type = 'password'>
+
+
+
+<button (click) = "log()">Log in</button>
+<button href = "#" routerLink = "/new-account">Register</button>

@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //port number
-var port = process.env.PORT || 8080;  
+var port = 8081;//process.env.PORT || 8080;  
 
 router = express.Router();
 
@@ -83,16 +83,19 @@ router.route('/login')
             if (objectFound === null){
                 return res.send({message: "Account is invalid"}); 
             }
+            //if the account is deactivated
+            if(!objectFound.activation){
+                return res.send({message:"Account is deactivated. Contact the store manager"});
+            }
+            
             //if the account is not verfied
             if(!objectFound.emailVerification){
                 verifyEmail(objectFound,req.get('host'));
                 return res.send({message: "Verification neeeded. Email resent"})
             }
+            
 
-            //if the account is deactivated
-            if(!objectFound.activation){
-                return res.send({message:"Account is deactivated. Contact the store manager"});
-            }
+
 
             //if the password from the body matches the hashed password in DB for the correct email
             if(bcrypt.compareSync(password,objectFound.password)){
@@ -189,15 +192,7 @@ router.route('/verify/:verificationCode')
 //if the input is not given for the id and password
 function accountInfo(email,password){
     var message = "";
-    //both email and password are empty
-    if (email ==="" && password ===""){
-        message = {message:"Please enter your account information"};
-    }
-    //empty email
-    if(email ===""){
-        
-        message = {message: "Please Enter your email"};
-    }
+
     //empty password
     if(password ===""){
         message = {message:"Please Enter your Password"};
