@@ -6,8 +6,7 @@ const bodyParser = require('body-parser');
 //initialize
 const app = express();
 
-//for hashing passwords
-const bcrypt = require('bcrypt');
+
 
 //connect mongoose
 var mongoose = require('mongoose');
@@ -17,8 +16,27 @@ mongoose.connect('mongodb://root:root123@ds341557.mlab.com:41557/lab5',{useNewUr
 var Song = require("./app/models/song");
 var User = require("./app/models/user");
 
+//for email verification
+var nev = require("email-verification")(mongoose);
+var nodeEmailer = require("nodemailer");
+
+//for random verification code
+var randomstring = require("randomstring");
+
+//for hashing passwords
+const bcrypt = require('bcrypt');
+
 //constant for salt
 const roundOfSalt = 10;
+
+//server email to send verification
+var serverEmail = nodeEmailer.createTransport({
+    service: "Gmail",
+    auth:{
+        user:'hkim778.se3316.lab5@gmail.com',
+        pass:'Example123'
+    }
+});
 
 
 // configure app to use bodyParser()
@@ -53,8 +71,8 @@ router.route('/login')
 
         //When user didn't enter anything
         //return is used so it doesn't duplicate send
-        if(validateEmail(email,password)!= ""){
-            return res.send(validateEmail(email,password));
+        if(emptySubmission(email,password)!= ""){
+            return res.send(emptySubmission(email,password));
         }
 
         
@@ -65,9 +83,14 @@ router.route('/login')
             if (objectFound === null){
                 return res.send({message: "Account is invalid"}); 
             }
-            //if the password from the body matches the password in DB of the correct email
+            //if the account is not verfied
+            if(!objectFound.emailVerification){
+                verifyEmail(objectFound,req.get('host'));
+                return res.send({message: "Verification neeeded. Email resent"})
+            }
+            //if the password from the body matches the hashed password in DB for the correct email
             if(bcrypt.compareSync(password,objectFound.password)){
-                return res.send({message: "Logged in successful!"});
+                return res.send({message: "Logged in successfully!"});
             }
             else //incorrect password
                 return res.send({message: "Account is invalid"}); //so the adversary doesn't know if the account or if the password is wrong
@@ -79,12 +102,13 @@ router.route('/login')
 //Create new user
 router.route('/newUser')
     .post(function(req,res){
+        var verificationCode;
         var email = req.body.email;
 
         var user = new User();
         
-        if(validateEmail(email,req.body.password)!= ""){
-            return res.send(validateEmail(email,req.body.password));
+        if(emptySubmission(email,req.body.password)!= ""){
+            return res.send(emptySubmission(email,req.body.password));
         }
 
         User.findOne({email: email},function(err,objectFound){
@@ -102,23 +126,107 @@ router.route('/newUser')
 
                 user.password = password;
 
+                verificationCode = randomstring.generate();
+                console.log(verificationCode);
+
+                user.verificationCode = verificationCode;
+
+                //sends the email
+                verifyEmail(user,req.get('host'));    
 
                 user.save(function(err){
                     if(err){
                         return res.send(err);
                     }
-                    return res.send({message: "New Account is created"});
+                    return res.send({message: "New Account is created. Check your email to verify"});
                 })
             }
             //other outcome
             else {
                 return res.send({message: "Account creation failed. Try again"});
-            }
-            
+            }  
         })
-
     })
 
+//for email verification website
+router.route('/verify/:verificationCode')
+
+    //initially put was attempted since i did not know we can alter the data from GET option
+    //when the user accesses the link, they will be verfied
+    .get(function(req,res){
+        var code= req.params.verifcationCode;
+        User.findOne({verifcationCode: code},function(err,objectFound){
+            if(err){
+                return res.send(error);
+            }
+            // if the user with the corresponding verification code does not exist
+            if(objectFound === null){
+                return res.send({message: "User does not exist"})
+            }
+
+            objectFound.emailVerification = true;
+            objectFound.save(function(err){
+                if(err)
+                    return res.send(err);
+            })
+            return res.send({message: "Account has been successfully registered"});
+
+        });
+    })
+    
+ 
+
+
+
+
+
+//if the input is not given for the id and password
+function emptySubmission(email,password){
+    var message = "";
+        if (email ==="" && password ===""){
+            message = {message:"Please enter your account information"};
+        }
+        if(email ===""){
+            
+            message = {message: "Please Enter your email"};
+        }
+        if(password ===""){
+            message = {message:"Please Enter your Password"};
+        }
+    return message;
+}
+
+function verifyEmail(user,host){
+    var verificationEmail,verificationLink;
+
+    //link to the file
+    verificationLink = "http://" + host+ "/api/verify/:" + user.verificationCode;
+    //console.log(verificationLink);
+    
+    //creates the required fields to who to send the email to 
+    verificationEmail = {
+        to: user.email,
+        subject: 'Confirm Your Email',
+        text: 'hi',
+        html:'<p>To Verfiy click <a href="'+ verificationLink +'">here</a></p>'
+    }
+
+    serverEmail.sendMail(verificationEmail,function(err,emaiSent){
+        if(err){
+            console.log("sending email unsuccessful");
+            return false;
+        }
+        else{
+            console.log("sending email successful");
+            return true;
+        }
+            
+            
+    });
+
+
+
+}
 
 // FOR NON-LOG IN USERS
 // /open/song returns 10 songs, ordered in average view 
@@ -137,22 +245,6 @@ router.route('/open/song/search')
         res.json("hello");
     });
 
-
-//if the input is not given for the id and password
-function validateEmail(email,password){
-    var message = "";
-        if (email ==="" && password ===""){
-            message = {message:"Please enter your account information"};
-        }
-        if(email ===""){
-            
-            message = {message: "Please Enter your email"};
-        }
-        if(password ===""){
-            message = {message:"Please Enter your Password"};
-        }
-    return message;
-}
 
 
 // REGISTER OUR ROUTES -------------------------------
