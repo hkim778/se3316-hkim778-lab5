@@ -9,6 +9,8 @@ import { HttpService } from '../http.service';
 export class SongsComponent implements OnInit {
   songs: Object;
   name: string;
+
+  
   constructor(private http:HttpService) { }
   
   ngOnInit() {
@@ -19,6 +21,7 @@ export class SongsComponent implements OnInit {
 
   search(){
     this.http.getSearch(this.name).subscribe(data=>{
+      console.log(data);
       this.songs = data;
     });
   }
