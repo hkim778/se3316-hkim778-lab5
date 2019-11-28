@@ -7,8 +7,6 @@ let SongSchema = new Schema({
     artist:String,
     album: String,
     year: {type:Number, max:4},
-    
-    
 
 })
 

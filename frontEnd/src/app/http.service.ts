@@ -21,4 +21,14 @@ export class HttpService {
     return this.http.post(url,user);
   }
 
+  getAllSongs(){
+    let url = this.url + "/open/song";
+    return this.http.get(url);
+  }
+
+  getSearch(title: string){
+    let url = this.url + "/open/song/search/" + title;
+    return this.http.get(url);
+  }
+
 }

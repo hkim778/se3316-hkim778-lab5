@@ -68,7 +68,6 @@ router.route('/login')
         var email = req.body.email;
         var password = req.body.password;
 
-
         //When user didn't enter anything
         //return is used so it doesn't duplicate send
         if(accountInfo(email,password)!= ""){
@@ -99,11 +98,7 @@ router.route('/login')
                 verifyEmail(objectFound,req.get('host'));
                 return res.send({message: "Verification neeeded. Email resent"})
             }
-            
             return res.send({message: "Logged in successfully!"});
-
-
-
         });
         
     });
@@ -163,41 +158,28 @@ router.route('/verify/:verificationCode')
     //initially put was attempted since i did not know we can alter the data from GET option
     //when the user accesses the link, they will be verfied
     .get(function(req,res){
-        var code= req.params.verifcationCode;
-        User.findOne({verifcationCode: code},function(err,objectFound){
-            if(err){
-                return res.send(error);
-            }
-            // if the user with the corresponding verification code does not exist
-            if(objectFound === null){
-                return res.send("<h1>User does not exist</h1>")
-            }
-            else{
+        var code= req.params.verificationCode;
+        
+        User.findOne({verificationCode: code},function(err,objectFound){
+            if(err)
+                return res.send(err);
+            if(objectFound!=null){
                 objectFound.emailVerification = true;
-                objectFound.save(function(err,verifiedObject){
+                objectFound.save(function(err){
+                    
                     if(err)
                         return res.send(err);
-                    if(verifiedObject){
-                        return res.send("<h1>User has been verified</h1>");
-                    }
-    
-                    
+                    return res.send("<h1>User has been Verified</h1>")
                 })
-
+                
             }
-
-            
-
-            
-
+            else{
+                return res.send("<h1>User does not exist</h1>")
+            }
         });
+
+
     })
-    
- 
-
-
-
-
 
 //if the input is not given for the id and password
 function accountInfo(email,password){
@@ -223,7 +205,7 @@ function verifyEmail(user,host){
     var verificationEmail,verificationLink;
 
     //link to the file
-    verificationLink = "http://" + host+ "/api/verify/:" + user.verificationCode;
+    verificationLink = "http://" + host+ "/api/verify/" + user.verificationCode;
     //console.log(verificationLink);
     
     //creates the required fields to who to send the email to 
@@ -243,30 +225,62 @@ function verifyEmail(user,host){
             console.log("sending email successful");
             return true;
         }
-            
-            
     });
-
-
-
 }
+
+
 
 // FOR NON-LOG IN USERS
 // /open/song returns 10 songs, ordered in average view 
 router.route('/open/song')
     .get(function(req,res){
+        
         Song.find(function(err,songs){
             if(err)
                 res.send(err);
 
             res.json(songs);
-        });
-    });
-//
-router.route('/open/song/search')
+        }).limit(10);
+    })
+    //temporary to create songs in the db
+    .post(function(req,res){
+        var title = req.body.title;
+        var artist = req.body.artist;
+
+        song = new Song();
+        song.title = title;
+        song.artist = artist;
+
+        song.save(function(err){
+            if (err)
+                return res.send(err);
+
+            return res.send({message: "song has been saved"});
+        })
+
+
+
+    })
+
+    
+//search for a specific song
+router.route('/open/song/search/:title')
     .get(function(req,res){
-        res.json("hello");
-    });
+        var name = req.params.title;
+        console.log(name);
+        Song.findOne({title: name},function(err,songFound){
+            if(err)
+                return res.send(err);
+
+            if(songFound === null){
+                return res.send({message: "Not in our database"})
+            }
+            res.json(songFound);
+        })
+    })
+
+
+
 
 
 

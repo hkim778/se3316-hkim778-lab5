@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   }
 
-  log(reroute: string){
+  log(){
     let user = {
       email: this.email,
       password:this.password
@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl("/authenticated");
         this.authentication = true;
       }
+      //need to add statements
       else{
         alert("Wrong Account");
         this.email = "";
