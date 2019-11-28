@@ -8,6 +8,8 @@ let SongSchema = new Schema({
     album: String,
     year: {type:Number, max:4},
 
+    reviews: {},
+
 })
 
 module.exports=mongoose.model('Songs',SongSchema);

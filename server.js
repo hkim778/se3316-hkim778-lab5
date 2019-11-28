@@ -263,12 +263,18 @@ router.route('/open/song')
     })
 
     
+
+
+
 //search for a specific song
 router.route('/open/song/search/:title')
     .get(function(req,res){
-        var name = req.params.title;
-        console.log(name);
-        Song.findOne({title: name},function(err,songFound){
+    
+        //The gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string.
+        var name = new RegExp(req.params.title,'gi');
+        
+        Song.find({title: name},function(err,songFound){
+            console.log(name)
             if(err)
                 return res.send(err);
 

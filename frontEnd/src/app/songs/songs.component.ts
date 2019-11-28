@@ -19,7 +19,7 @@ export class SongsComponent implements OnInit {
 
   search(){
     this.http.getSearch(this.name).subscribe(data=>{
-      console.log(data);
+      this.songs = data;
     });
   }
 
