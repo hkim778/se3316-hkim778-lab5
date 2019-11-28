@@ -10,6 +10,8 @@ import{ HttpClientModule } from '@angular/common/http';
 import{ FormsModule } from '@angular/forms';
 import { HidePasswordDirective } from './hide-password.directive';
 import { NewAccountComponent } from './new-account/new-account.component';
+import { AuthenticatedComponent } from './authenticated/authenticated.component';
+import { SongsComponent } from './songs/songs.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { NewAccountComponent } from './new-account/new-account.component';
     HomeComponent,
     LoginComponent,
     HidePasswordDirective,
-    NewAccountComponent
+    NewAccountComponent,
+    AuthenticatedComponent,
+    SongsComponent
   ],
   imports: [
     BrowserModule,

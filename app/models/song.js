@@ -5,6 +5,9 @@ let SongSchema = new Schema({
     //id:{type:String, required: true},
     title: String,
     artist:String,
+    album: String,
+    year: {type:Number, max:4},
+    
     
 
 })

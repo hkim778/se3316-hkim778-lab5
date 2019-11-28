@@ -1,30 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../http.service';
+import { Router } from '@angular/router'
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
+
 })
 export class LoginComponent implements OnInit {
 
-  public email:String = '';
-  public password: String ='';
-  constructor(private _http: HttpService) { }
+  public authentication: Boolean = false;
+  email:String = '';
+  password: String ='';
+  constructor(private _http: HttpService, private router: Router) { }
 
   ngOnInit() {
 
   }
 
-  log(){
+  log(reroute: string){
     let user = {
       email: this.email,
       password:this.password
     }
 
     this._http.logIn(user).subscribe(data=>{
-      console.log(data);
-    })
+      if(data['message']=="Logged in successfully!"){
+        this.router.navigateByUrl("/authenticated");
+        this.authentication = true;
+      }
+      else{
+        alert("Wrong Account");
+        this.email = "";
+        this.password="";
+        
+      }
+    });
   }
 
 }

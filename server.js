@@ -83,6 +83,12 @@ router.route('/login')
             if (objectFound === null){
                 return res.send({message: "Account is invalid"}); 
             }
+
+            //if the password from the body doesn't match the hashed password in DB for the correct email
+            if(!bcrypt.compareSync(password,objectFound.password)){
+                return res.send({message: "Account is invalid"}); //so the adversary doesn't know if the account or if the password is wrong
+            }   
+
             //if the account is deactivated
             if(!objectFound.activation){
                 return res.send({message:"Account is deactivated. Contact the store manager"});
@@ -94,16 +100,10 @@ router.route('/login')
                 return res.send({message: "Verification neeeded. Email resent"})
             }
             
+            return res.send({message: "Logged in successfully!"});
 
 
 
-            //if the password from the body matches the hashed password in DB for the correct email
-            if(bcrypt.compareSync(password,objectFound.password)){
-                return res.send({message: "Logged in successfully!"});
-            }
-            else //incorrect password
-                return res.send({message: "Account is invalid"}); //so the adversary doesn't know if the account or if the password is wrong
-            
         });
         
     });
@@ -170,15 +170,25 @@ router.route('/verify/:verificationCode')
             }
             // if the user with the corresponding verification code does not exist
             if(objectFound === null){
-                return res.send({message: "User does not exist"})
+                return res.send("<h1>User does not exist</h1>")
+            }
+            else{
+                objectFound.emailVerification = true;
+                objectFound.save(function(err,verifiedObject){
+                    if(err)
+                        return res.send(err);
+                    if(verifiedObject){
+                        return res.send("<h1>User has been verified</h1>");
+                    }
+    
+                    
+                })
+
             }
 
-            objectFound.emailVerification = true;
-            objectFound.save(function(err){
-                if(err)
-                    return res.send(err);
-            })
-            return res.send({message: "Account has been successfully registered"});
+            
+
+            
 
         });
     })
