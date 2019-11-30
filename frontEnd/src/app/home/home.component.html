@@ -25,7 +25,74 @@
     
 </div>
 
+<h1>Songs</h1>
+
+
+<div *ngIf = "detailed">
+    <h2>Detailed Information</h2>
+    <p class = "title">Title: {{detailed.title}}</p>
+    <p class = "artist">Artist: {{detailed.artist}}</p>
+    <p class = "album">Album: {{detailed.album}}</p>
+    <p class = "year">Year: {{detailed.year}}</p>
+    <p class = "track">Track: {{detailed.track}}</p>
+    <p class = "genre">Genre: {{detailed.genre}}</p>
+    <p class = "num">Number of Review: {{detailed['review'].length}} </p>
+    
+    <ul *ngIf = !viewAll>
+        <li>
+            <p class = "lastReview">User Name: {{detailed['review'][detailed['review'].length-1].username}}</p>
+            <p class = "lastReview">Review: {{detailed['review'][detailed['review'].length-1].username}}</p>
+            <p class = "lastReview">Rating: {{detailed['review'][detailed['review'].length-1].username}}</p>
+        </li>
+    </ul>
+
+    <ul *ngIf = viewAll>
+        <li *ngFor = "let rev of detailed['review']" >
+            <p class ="username">User Name: {{rev.username}}</p>
+            <p class ="review">Review: {{rev.review}} </p>
+            <p class ="rating">Rating: {{rev.rating}}</p>
+        </li>
+    </ul>
+
+    <button (click)="showAll()" *ngIf = !viewAll>Show All</button>
+    <button (click)="showAll()" *ngIf = viewAll>Show One</button>
+
+   
+    <!--
+    <ul>
+
+    </ul>
+    -->
+
+
+
+
+</div>
+
+
+
+
+
+Title: <input [(ngModel)]="name" placeholder="name of the title" >
+<button (click)='search()'>Search</button>
+
+<ul id = "songs" *ngIf = "songs" >
+    <li *ngFor = "let song of songs">
+        <p class = "title">{{song.title}}</p>
+        <p class = "artist">{{song.artist}}</p>
+        <p class = "album">Album: {{song.album}}</p>
+        <p class = "year">Year: {{song.year}}</p>
+        <p class ="review">Review: {{song["review"]}}</p>
+        <button (click)="detailedView(song)">Get Information</button>
+    </li>
+
+</ul>
+
+
+
 
 
 <button href = "#" routerLink = "/login">Log In</button>
+
+
 

@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 //initialize
 const app = express();
 
+//jswon webtokn token
+const jwt = require ('jsonwebtoken');
 
 
 //connect mongoose
@@ -37,6 +39,8 @@ var serverEmail = nodeEmailer.createTransport({
         pass:'Example123'
     }
 });
+
+
 
 
 // configure app to use bodyParser()
@@ -98,6 +102,7 @@ router.route('/login')
                 verifyEmail(objectFound,req.get('host'));
                 return res.send({message: "Verification neeeded. Email resent"})
             }
+            
             return res.send({message: "Logged in successfully!"});
         });
         
@@ -142,6 +147,7 @@ router.route('/newUser')
                     if(err){
                         return res.send(err);
                     }
+                    
                     return res.send({message: "New Account is created. Check your email to verify"});
                 })
             }
@@ -238,7 +244,6 @@ router.route('/open/song')
         Song.find(function(err,songs){
             if(err)
                 res.send(err);
-
             res.json(songs);
         }).limit(10);
     })
@@ -247,16 +252,9 @@ router.route('/open/song')
         var title = req.body.title;
         var artist = req.body.artist;
 
-        var review = req.body.review;
-        console.log(review);
-
         song = new Song();
         song.title = title;
         song.artist = artist;
-        
-        var review = {username: req.body.username, review: req.body.review, rating: req.body.rating};
-
-        song.review.push(review);
 
         song.save(function(err){
             if (err)
@@ -268,16 +266,23 @@ router.route('/open/song')
 
 
     })
+
+    
+
+
+
 //search for a specific song
 router.route('/open/song/search/:title')
     .get(function(req,res){
     
-        //http://w3schools.sinsixx.com/jsref/jsref_regexp_modifier_gi.asp.htm
+
+        
         //The gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string.
         var name = new RegExp(req.params.title,'gi');
-        
-        Song.find({title: name},function(err,songFound){
-            console.log(name)
+        console.log(name);
+
+        Song.find({title:name},function(err,songFound){
+            
             if(err)
                 return res.send(err);
 
@@ -287,69 +292,6 @@ router.route('/open/song/search/:title')
             res.json(songFound);
         })
     })
-
-//add a review and ratings to a song
-router.route('/auth/song/review/:song')
-    .post (function(req,res){
-        var title = req.params.song;
-
-        var username = req.body.username;
-        var review = req.body.review;
-        var rating = req.body.rating;
-
-        var temp = {username: username, review: review, rating: rating};
-
-
-        Song.findOne({title:title},function(err,toReview){
-            if(err)
-                return res.send(err);
-            toReview.review.push(temp);
-            //detailed view of song is updated
-            res.json(toReview);
-            
-        })
-        
-    })
-
-//add a song
-router.route('/auth/song')
-    .post (function(req,res){
-        //required
-        var title = req.body.title;
-        var artist = req.body.artist;
-        var album = req.body.album;
-        var year = req.body.year;
-        var track = req.body.track;
-        var genre = req.body.genre;
-
-        //not required 
-        var username = req.body.username;
-        var review = req.body.reqview;
-        var rating = req.body.rating;
-        var temp ={username: username, review: review, rating:rating};
-
-        var song = new Song({
-            title: title,
-            artist: artist,
-            album: album,
-            year: year,
-            track: track,
-            genre: genre
-        })
-        
-        song.review.push(temp);
-
-        song.save(function(err){
-            if(err)
-                return res.send(err);
-        })
-
-
-    })
-
-
-
-
 
 
 

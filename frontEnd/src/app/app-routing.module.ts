@@ -5,15 +5,15 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NewAccountComponent } from './new-account/new-account.component';
 import { AuthenticatedComponent } from './authenticated/authenticated.component';
-import { SongsComponent} from './songs/songs.component';
+
+
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent},
   { path: 'new-account',component:NewAccountComponent},
-  { path: 'songs', component: SongsComponent},
-  { path: 'authenticated', component: AuthenticatedComponent},
+  { path: 'authenticated', component: AuthenticatedComponent, data:{requiresLogin: true}},
   
 ];
 

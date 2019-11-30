@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginComponent } from '../login/login.component';
+import { Router } from '@angular/router'
+
 
 @Component({
   selector: 'app-authenticated',
@@ -8,9 +9,13 @@ import { LoginComponent } from '../login/login.component';
 })
 export class AuthenticatedComponent implements OnInit {
 
-  constructor(private autenticated: LoginComponent) { }
+  constructor(private router:Router) { }
 
   ngOnInit() {
+    if(localStorage.username == null){
+      this.router.navigateByUrl('/login');
+      alert("You do not have access");
+    }
   }
 
 }

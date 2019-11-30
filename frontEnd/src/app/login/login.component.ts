@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router'
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -30,6 +29,8 @@ export class LoginComponent implements OnInit {
       if(data['message']=="Logged in successfully!"){
         this.router.navigateByUrl("/authenticated");
         this.authentication = true;
+
+        localStorage.username=this.email;
       }
       //need to add statements
       else{
