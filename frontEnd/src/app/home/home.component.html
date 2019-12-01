@@ -11,6 +11,7 @@
         <li>Display Song information</li>
         <li>View all reviews for the song - review, rating, reviewer's username</li>
     </ul>
+
     
 <!-- for the authenticated
     <h4>For Authenticated Users</h4>
@@ -21,14 +22,43 @@
         <li>Add a review when adding the song</li>
     </ul>
 -->
-
-    
 </div>
+
+<button *ngIf = !loggedIn href = "#" routerLink = "/login">Log In</button>
+<button *ngIf = loggedIn href = "#" routerLink = "/" (click) = "logOut()">Log Out</button>
+
+<div *ngIf = loggedIn>
+    <h3>Welcome {{username}} </h3>
+    <button (click)="addNewSong()">Add new Song</button>
+    <div *ngIf = newSong id = "newSong">
+        Title: <input [(ngModel)]="title">
+        <br>
+        Artist: <input [(ngModel)]="artist">
+        <br>
+        Album: <input [(ngModel)]="album">
+        <br>
+        Year: <input [(ngModel)]="year" type = "number" min= "1800" max = "2019">
+        <br>
+        Track: <input [(ngModel)]="track" type = "number" min = "1">
+        <br>
+        Genre: <input [(ngModel)]="genre">
+        <br>
+        {{username}}
+        <br>
+        <br>
+        Review: <textarea [(ngModel)]="review" cols = "50" rows = "5"></textarea>
+        <br>
+        Rating: <input [(ngModel)]="rating" type="number">
+        <br>
+        <button (click) = "createSong()">Create</button>
+    </div>
+</div>
+
 
 <h1>Songs</h1>
 
 
-<div *ngIf = "detailed">
+<div *ngIf = openDetailed>
     <h2>Detailed Information</h2>
     <p class = "title">Title: {{detailed.title}}</p>
     <p class = "artist">Artist: {{detailed.artist}}</p>
@@ -38,23 +68,39 @@
     <p class = "genre">Genre: {{detailed.genre}}</p>
     <p class = "num">Number of Review: {{detailed['review'].length}} </p>
     
+    <div *ngIf = loggedIn>
+        <button (click)="addReview()">Add a Review</button>
+        <!--
+            if user wants to add a review
+        -->
+        <div *ngIf = reviewField id = "reviewform">
+            <p>Username: {{username}}</p>
+            Review: <br>
+            <textarea [(ngModel)]= "review" cols = "50" rows = "5"></textarea>
+            <br>
+            Ratings: <input [(ngModel)] = "rating" type="number" min = 0 max = 10>
+            <br>
+            <button (click)="sendReview(detailed.title)">Post Review</button>
+        </div>
 
+    </div>
+ 
     <p>{{average(detailed['review'],detailed['review'].length)}}Average Rating: {{avg}}</p>
 
-  
-    <!--
-        *ngFor = "let rev of detailed['review']" 
-    {{average(rev.rating,detailed['review'].length)}}
-    -->
 
+    <!--
+        shows the most recent review
+    -->
     <ul *ngIf = !viewAll>
-        <li>
+        <li *ngIf = reviews>
             <p class = "lastReview">User Name: {{detailed['review'][detailed['review'].length-1].username}}</p>
             <p class = "lastReview">Review: {{detailed['review'][detailed['review'].length-1].review}}</p>
             <p class = "lastReview">Rating: {{detailed['review'][detailed['review'].length-1].rating}}</p>
         </li>
     </ul>
-
+    <!--
+        Shows all of the review
+    -->
     <ul *ngIf = viewAll>
         <li *ngFor = "let rev of detailed['review']">
             <p class ="username">User Name: {{rev.username}}</p>
@@ -78,10 +124,10 @@ Title: <input [(ngModel)]="name" placeholder="name of the title" >
         <p class = "artist">{{song.artist}}</p>
         <p class = "album">Album: {{song.album}}</p>
         <p class = "year">Year: {{song.year}}</p>
-        <p class ="review">Review: {{song["review"]}}</p>
         <button (click)="detailedView(song)">Get Information</button>
     </li>
 </ul>
 
 
-<button href = "#" routerLink = "/login">Log In</button>
+
+

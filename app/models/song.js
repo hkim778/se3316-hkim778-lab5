@@ -13,7 +13,7 @@ let SongSchema = new Schema({
     title: {type:String, required: true},
     artist:{type:String, required: true},
     album: {type:String, required: true},
-    year: {type:Number, max:4, required:true},
+    year: {type: Number, required:true},
     track: {type:Number, required: true},
     genre: {type:String, required: true},
 

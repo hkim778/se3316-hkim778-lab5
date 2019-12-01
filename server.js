@@ -102,8 +102,12 @@ router.route('/login')
                 verifyEmail(objectFound,req.get('host'));
                 return res.send({message: "Verification neeeded. Email resent"})
             }
-            
-            return res.send({message: "Logged in successfully!"});
+            if(objectFound.admin)
+            {
+                return res.send({message: "Welcome, Admin"});
+            }
+            else
+                return res.send({message: "Logged in successfully!"});
         });
         
     });
@@ -247,29 +251,6 @@ router.route('/open/song')
             res.json(songs);
         }).limit(10);
     })
-    //temporary to create songs in the db
-    .post(function(req,res){
-        var title = req.body.title;
-        var artist = req.body.artist;
-
-        song = new Song();
-        song.title = title;
-        song.artist = artist;
-
-        song.save(function(err){
-            if (err)
-                return res.send(err);
-
-            return res.send({message: "song has been saved"});
-        })
-
-
-
-    })
-
-    
-
-
 
 //search for a specific song
 router.route('/open/song/search/:title')
@@ -280,7 +261,7 @@ router.route('/open/song/search/:title')
         //The gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string.
         var name = new RegExp(req.params.title,'gi');
         console.log(name);
-
+        //need soft matching
         Song.find({title:name},function(err,songFound){
             
             if(err)
@@ -291,6 +272,63 @@ router.route('/open/song/search/:title')
             }
             res.json(songFound);
         })
+    })
+
+//add review to the song
+router.route('/secure/review/:title')
+    .put(function(req,res){
+        var name = req.params.title;
+
+        var username = req.body.username;
+        var review = req.body.review;
+        
+        var ratings = req.body.rating;
+
+        var temp = {username: username, review: review, rating: ratings}
+
+        Song.findOne({title:name},function(err,songFound){
+            if(err)
+                return res.send(err);
+            songFound.review.push(temp);
+            songFound.save(function(err){
+                if(err)
+                    return res.send(err);
+
+                return res.send({message: "Review is added"});
+            })
+        })
+    })
+
+router.route('/secure/song')
+    .post(function(req,res){
+        var title = req.body.title;
+        var artist = req.body.artist;
+
+        song = new Song();
+        song.title = title;
+        song.artist = artist;
+        song.album = req.body.album;
+        song.year= req.body.year;
+        song.track = req.body.track;
+        song.genre= req.body.genre;
+
+        var username = req.body.username;
+        var review = req.body.review;
+        
+        var ratings = req.body.rating;
+        var temp = {username: username, review: review, rating: ratings}
+        song.review.push(temp);
+
+
+        song.save(function(err){
+            if (err)
+                return res.send(err);
+
+            return res.send({message: "song has been saved"});
+        })
+
+
+
     })
 
 

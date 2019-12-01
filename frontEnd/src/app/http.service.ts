@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,12 @@ export class HttpService {
     
    }
 
-  logIn(user){
+  logIn(user:object){
     let url = this.url + "/login";
     return this.http.post(url,user);
   }
 
-  newUser(user){
+  newUser(user:object){
     let url = this.url + "/newUser";
     return this.http.post(url,user);
   }
@@ -29,6 +30,16 @@ export class HttpService {
   getSearch(title: string){
     let url = this.url + "/open/song/search/" + title;
     return this.http.get(url);
+  }
+
+  putReview(review:object, title:string){
+    let url = this.url + "/secure/review/" + title;
+    return this.http.put(url,review);
+  }
+
+  createSong(song:object){
+    let url = this.url + "/secure/song";
+    return this.http.post(url,song);
   }
 
 }

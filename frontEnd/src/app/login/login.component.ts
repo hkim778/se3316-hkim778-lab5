@@ -16,7 +16,9 @@ export class LoginComponent implements OnInit {
   constructor(private _http: HttpService, private router: Router) { }
 
   ngOnInit() {
-
+    if(localStorage.username != null){
+      this.router.navigateByUrl("/");
+    }
   }
 
   log(){
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
 
     this._http.logIn(user).subscribe(data=>{
       if(data['message']=="Logged in successfully!"){
-        this.router.navigateByUrl("/authenticated");
+        this.router.navigateByUrl("/");
         this.authentication = true;
 
         localStorage.username=this.email;
