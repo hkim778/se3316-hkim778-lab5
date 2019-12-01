@@ -38,16 +38,25 @@
     <p class = "genre">Genre: {{detailed.genre}}</p>
     <p class = "num">Number of Review: {{detailed['review'].length}} </p>
     
+
+    <p>{{average(detailed['review'],detailed['review'].length)}}Average Rating: {{avg}}</p>
+
+  
+    <!--
+        *ngFor = "let rev of detailed['review']" 
+    {{average(rev.rating,detailed['review'].length)}}
+    -->
+
     <ul *ngIf = !viewAll>
         <li>
             <p class = "lastReview">User Name: {{detailed['review'][detailed['review'].length-1].username}}</p>
-            <p class = "lastReview">Review: {{detailed['review'][detailed['review'].length-1].username}}</p>
-            <p class = "lastReview">Rating: {{detailed['review'][detailed['review'].length-1].username}}</p>
+            <p class = "lastReview">Review: {{detailed['review'][detailed['review'].length-1].review}}</p>
+            <p class = "lastReview">Rating: {{detailed['review'][detailed['review'].length-1].rating}}</p>
         </li>
     </ul>
 
     <ul *ngIf = viewAll>
-        <li *ngFor = "let rev of detailed['review']" >
+        <li *ngFor = "let rev of detailed['review']">
             <p class ="username">User Name: {{rev.username}}</p>
             <p class ="review">Review: {{rev.review}} </p>
             <p class ="rating">Rating: {{rev.rating}}</p>
@@ -57,21 +66,8 @@
     <button (click)="showAll()" *ngIf = !viewAll>Show All</button>
     <button (click)="showAll()" *ngIf = viewAll>Show One</button>
 
-   
-    <!--
-    <ul>
-
-    </ul>
-    -->
-
-
-
-
 </div>
-
-
-
-
+<br>
 
 Title: <input [(ngModel)]="name" placeholder="name of the title" >
 <button (click)='search()'>Search</button>
@@ -85,14 +81,7 @@ Title: <input [(ngModel)]="name" placeholder="name of the title" >
         <p class ="review">Review: {{song["review"]}}</p>
         <button (click)="detailedView(song)">Get Information</button>
     </li>
-
 </ul>
 
 
-
-
-
 <button href = "#" routerLink = "/login">Log In</button>
-
-
-

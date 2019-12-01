@@ -12,7 +12,12 @@ export class HomeComponent implements OnInit {
   songs: Object;
   name: string;
   detailed: Object;
-  viewAll: boolean
+  viewAll: boolean;
+  avg: Number;
+
+  total: number;
+
+
   constructor(private http:HttpService) { }
 
   ngOnInit() {
@@ -21,6 +26,7 @@ export class HomeComponent implements OnInit {
       this.songs = data;
     });
     this.viewAll = false;
+
   }
   search(){
     this.http.getSearch(this.name).subscribe(data=>{
@@ -39,6 +45,23 @@ export class HomeComponent implements OnInit {
     else
       this.viewAll = false;
  
+  }
+
+  average(value: object,length: number){
+    this.avg = 0;
+    this.total = 0;
+    
+    for(var i = 0; i<length ; i ++ )
+    {
+      if(value[i]== null || value[i]== NaN){
+      }
+      else{
+        this.total += value[i].rating
+      }
+      
+    } 
+
+    this.avg = this.total/length;
   }
 
 }
