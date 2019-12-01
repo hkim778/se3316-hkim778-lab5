@@ -1,5 +1,5 @@
 <h1>Home Page</h1>
-
+<h1 *ngIf = admin>USER ACCESS: SITE MANAGER</h1>
 <div>
     <h2>Simple Music App</h2>
 
@@ -23,11 +23,11 @@
     </ul>
 -->
 </div>
+<!--login and admin separate if i have time-->
+<button *ngIf = "!loggedIn"  href = "#" routerLink = "/login">Log In</button>
+<button *ngIf = "loggedIn" href = "#" routerLink = "/" (click) = "logOut()">Log Out</button>
 
-<button *ngIf = !loggedIn href = "#" routerLink = "/login">Log In</button>
-<button *ngIf = loggedIn href = "#" routerLink = "/" (click) = "logOut()">Log Out</button>
-
-<div *ngIf = loggedIn>
+<div *ngIf = "loggedIn">
     <h3>Welcome {{username}} </h3>
     <button (click)="addNewSong()">Add new Song</button>
     <div *ngIf = newSong id = "newSong">

@@ -1,0 +1,17 @@
+<h1>List of users</h1>
+<ul id = "users" *ngIf = "users" >
+        <li *ngFor = "let user of users">
+
+            <p class = "email">{{user.email}}</p>
+            <p *ngIf= user.admin>Account Type: Site Manager</p>
+            <p *ngIf= !user.admin>Account Type: Regular</p>
+            <p>Email verified: {{user.emailVerification}}</p>
+            <p>Activated: {{user.activation}}</p>
+            <br>
+            <button (click)="grantPrivilege(user)">Grant Privilege</button>
+            <br>
+            <button (click)="activation(user)">Change Activity Status</button>
+
+
+        </li>
+    </ul>

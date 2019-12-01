@@ -11,6 +11,7 @@ import{ FormsModule } from '@angular/forms';
 import { HidePasswordDirective } from './hide-password.directive';
 import { NewAccountComponent } from './new-account/new-account.component';
 import { AuthenticatedComponent } from './authenticated/authenticated.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AuthenticatedComponent } from './authenticated/authenticated.component'
     HidePasswordDirective,
     NewAccountComponent,
     AuthenticatedComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,

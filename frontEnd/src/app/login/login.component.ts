@@ -28,11 +28,22 @@ export class LoginComponent implements OnInit {
     }
 
     this._http.logIn(user).subscribe(data=>{
-      if(data['message']=="Logged in successfully!"){
+      let message = data['message'];
+      if(message=="Logged in successfully!"){
         this.router.navigateByUrl("/");
         this.authentication = true;
 
         localStorage.username=this.email;
+      }
+      else if (message == "Welcome, Admin")
+      {
+        localStorage.admin = this.email;
+        localStorage.username = "Site Manager";
+        this.router.navigateByUrl("/admin");
+      }
+      else if(message =="Account is deactivated. Contact the store manager")
+      {
+        alert(message);
       }
       //need to add statements
       else{

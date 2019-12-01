@@ -106,8 +106,8 @@ router.route('/login')
             {
                 return res.send({message: "Welcome, Admin"});
             }
-            else
-                return res.send({message: "Logged in successfully!"});
+            
+            return res.send({message: "Logged in successfully!"});
         });
         
     });
@@ -329,6 +329,78 @@ router.route('/secure/song')
 
 
 
+    })
+
+router.route("/admin/users")
+    .get(function(req,res){
+        User.find(function(err,found){
+            if(err)
+                return res.send(err);
+            if(found === null)
+                return res.send({message:"User does not exist"});
+            
+            res.json(found);
+        })
+    })
+
+router.route("/admin/user/:id")
+    .get(function(req,res){
+        var id = req.params.id;
+
+
+
+        User.findOne({_id:id},function(err,userFound){
+            if(err)
+                return res.send(err);
+            
+            if(userFound == null){
+                return res.send({message:"That user does not exist"})
+            }
+
+            if(!userFound.admin)
+                userFound.admin = true;
+                userFound.save(function(err){
+                    if (err)
+                        return res.send(err);
+                    return res.send({message:"Priviledge is granted"});
+                })
+
+            
+        })
+
+    })
+
+router.route("/admin/user/deactivate/:id")
+    .get(function(req,res){
+        var id = req.params.id;
+        User.findOne({_id:id},function(err,userFound){
+            if(err)
+                return res.send(err);
+            
+            if(userFound == null){
+                return res.send({message:"That user does not exist"})
+            }
+
+            if(!userFound.activation)
+                userFound.activation = true;
+            else
+                userFound.activation = false;
+
+            userFound.save(function(err){
+                if (err)
+                    return res.send(err);
+                if(userFound.activation)
+                {
+                    return res.send({message:"Account is activated"});
+                }
+                else{
+                    return res.send({message:"Account is deactivated"});
+                }
+                
+            })
+
+            
+        })
     })
 
 

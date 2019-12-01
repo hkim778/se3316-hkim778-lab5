@@ -42,4 +42,20 @@ export class HttpService {
     return this.http.post(url,song);
   }
 
+  getAllUsers(){
+    let url = this.url + "/admin/users";
+    return this.http.get(url);
+  }
+
+  grantPrivilege(id:string){
+    let url = this.url + "/admin/user/" + id;
+    return this.http.get(url);
+  }
+
+
+  deactivate(id:string){
+    let url = this.url + "/admin/user/deactivate/" + id;
+    return this.http.get(url);
+  }
+
 }

@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   track:number;
   genre:string;
 
+  admin:boolean;
 
   
   constructor(private http:HttpService, private router:Router) { }
@@ -62,6 +63,13 @@ export class HomeComponent implements OnInit {
     }
 
     this.openDetailed = false;
+
+    if(localStorage.admin == null)
+    {
+      this.admin = false;
+    }
+    else 
+      this.admin = true;
 
 
 
