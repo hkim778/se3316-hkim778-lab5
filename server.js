@@ -22,6 +22,9 @@ var User = require("./app/models/user");
 var nev = require("email-verification")(mongoose);
 var nodeEmailer = require("nodemailer");
 
+//soft-matching
+var stringSimilarity = require('string-similarity');
+
 //for random verification code
 var randomstring = require("randomstring");
 
@@ -202,8 +205,11 @@ function accountInfo(email,password){
 
     //for invalid email format
     var emailVerify = /[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}/;
-
-    var emailTest = emailVerify.test(email);
+    var emailTest = true;
+    if(email != "site manager"){
+        emailTest = emailVerify.test(email);
+    }
+ 
     if(!emailTest){
         message = {message: "Invalid email"};
     }
@@ -248,26 +254,65 @@ router.route('/open/song')
         Song.find(function(err,songs){
             if(err)
                 res.send(err);
+            
+            var total=0, average = 0;
+            var temp = [];
+            //for each songs in the DB
+            for(var i =0; i <songs.length;i ++){
+                total = 0;
+                average = 0;
+                //for each ratings
+                //console.log(songs[i].review.length);
+                for(var j = 0; j<songs[i].review.length;j++){
+                    //console.log(songs[i].review[j].rating)
+                    //calculates the average of the specific song
+                    total += songs[i].review[j].rating;
+                    average = total / (songs[i].review.length)
+                    
+                }
+                //add the average
+                temp.push(average);
+            }
+            
+            //console.log(temp);
+            
+            //sort it by the average ratings
+            for (var i = 0; i<temp.length; i ++){
+                for(var j = i+1; j<temp.length; j++){
+                    if(temp[i]<temp[j]){
+                        var tempB = temp[i];
+                        temp[i] = temp[j];
+                        temp[j]= tempB;
+                    
+                        var tempA = songs[i];
+                        songs[i] = songs[j];
+                        songs[j] = tempA;
+                        
+                    }
+                }
+            }
+        
+            //console.log(songs);
             res.json(songs);
-        }).limit(10);
+        }).limit(10)
     })
 
 //search for a specific song
 router.route('/open/song/search/:title')
     .get(function(req,res){
-    
-
+        var name = req.params.title;
+        console.log(name);
         
         //The gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string.
-        var name = new RegExp(req.params.title,'gi');
-        console.log(name);
+        name = new RegExp(req.params.title,'gi');
+        //console.log(name);
         //need soft matching
         Song.find({title:name},function(err,songFound){
             
             if(err)
                 return res.send(err);
 
-            if(songFound === null){
+            if(songFound.length == 0){
                 return res.send({message: "Not in our database"})
             }
             res.json(songFound);

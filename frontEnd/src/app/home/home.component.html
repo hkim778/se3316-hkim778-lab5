@@ -115,15 +115,14 @@
 </div>
 <br>
 
-Title: <input [(ngModel)]="name" placeholder="name of the title" >
+Title: <input [(ngModel)]="name" placeholder="name of the title" > 
+
 <button (click)='search()'>Search</button>
 
 <ul id = "songs" *ngIf = "songs" >
     <li *ngFor = "let song of songs">
         <p class = "title">{{song.title}}</p>
         <p class = "artist">{{song.artist}}</p>
-        <p class = "album">Album: {{song.album}}</p>
-        <p class = "year">Year: {{song.year}}</p>
         <button (click)="detailedView(song)">Get Information</button>
     </li>
 </ul>
