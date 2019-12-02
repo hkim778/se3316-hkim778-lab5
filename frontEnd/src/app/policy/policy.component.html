@@ -1,1 +1,60 @@
-<p>policy works!</p>
+<h1>Policy</h1>
+
+
+<div *ngIf =admin>
+        <button (click)= "createPolicy()"><a *ngIf = !create>Add Policy</a><a *ngIf = create>Submit Policy</a></button>
+        <div *ngIf = create>
+            policy1: <textarea  class = "policy1" [(ngModel)] = new1 cols = "40" rows = "3" ></textarea>
+            <br>
+            policy2: <textarea class = "policy2" [(ngModel)] = new2 cols = "40" rows = "3" ></textarea>
+            <br>
+            policy3: <textarea class = "policy3" [(ngModel)] = new3 cols = "40" rows = "3" ></textarea>
+        </div>
+        <br>
+
+    </div>
+
+<div *ngIf = "edit && admin">
+
+    <textarea class = "policy1" [(ngModel)] = policy1 cols = "40" rows = "3" ></textarea>
+    <br>
+    <textarea class = "policy2" [(ngModel)] = policy2 cols = "40" rows = "3" ></textarea>
+    <br>
+    <textarea class = "policy3" [(ngModel)] = policy3 cols = "40" rows = "3" ></textarea>
+
+</div>
+
+<ol id = "policies" *ngIf = "policies" >
+
+        <div>
+            <li  *ngFor = "let policy of policies">
+                <p class = "policy1">{{policy.policy1}}</p>
+                <p class = "policy2">{{policy.policy2}}</p>
+                <p class = "policy3">{{policy.policy3}}</p>
+                <button *ngIf= admin (click) = editPolicy(policy)>Edit</button>
+            </li>
+        </div>
+
+
+</ol>
+
+<div *ngIf = admin>
+    <h3>Protocol</h3>
+    <ol>
+        <li>Reasonably sufficient details to enable us to identify the work claimed to be infringed or, if multiple works are claimed to be infringed, a representative list of such works (for example: title, author, any registration or tracking number, URL);</li>
+        <li>Reasonably sufficient detail to enable us to identify and locate the material that is claimed to be infringing (for example a link to the page that contains the material);</li>
+        <li>Your contact information so that we can contact you (for example, your address, telephone number, email address);</li>
+        <li>A statement that you have a good faith belief that the use of the material identified in (2) is not authorized by the copyright owner, its agent, or the law;</li>
+        <li>A statement, under penalty of perjury, that the information in the notification is accurate and that you are authorized to act on behalf of the owner of the exclusive right that is alleged to be infringed.</li>
+        <li>Your physical or electronic signature.</li>
+    </ol>
+
+        
+        
+        
+</div>
+
+<h3>Contact Information: hkim778.se3316.lab5@gmail.com</h3>
+
+<p>security and privacy policy from: https://www.bbb.org/greater-san-francisco/for-businesses/toolkits1/sample-privacy-policy/</p>
+<p>DMCA information achieved from: https://creativecommons.org/dmca/</p>

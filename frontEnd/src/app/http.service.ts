@@ -58,4 +58,20 @@ export class HttpService {
     return this.http.get(url);
   }
 
+  getAllPolicy(){
+    let url = this.url + "/admin/policy";
+    return this.http.get(url);
+  }
+
+  createPolicy(policies:object){
+    let url = this.url + "/admin/policy";
+    return this.http.post(url,policies);
+  }
+
+  updatePolicy(id:string,policies:object){
+    let url = this.url + "/admin/policy/"+id;
+    return this.http.put(url,policies);
+  }
+
+
 }

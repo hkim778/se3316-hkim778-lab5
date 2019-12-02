@@ -17,6 +17,7 @@ mongoose.connect('mongodb://root:root123@ds341557.mlab.com:41557/lab5',{useNewUr
 //Model Schemas
 var Song = require("./app/models/song");
 var User = require("./app/models/user");
+var Policy = require("./app/models/policy");
 
 //for email verification
 var nev = require("email-verification")(mongoose);
@@ -394,7 +395,7 @@ router.route("/admin/user/:id")
 
 
 
-        User.findOne({_id:id},function(err,userFound){
+        User.findById(id,function(err,userFound){
             if(err)
                 return res.send(err);
             
@@ -418,7 +419,7 @@ router.route("/admin/user/:id")
 router.route("/admin/user/deactivate/:id")
     .get(function(req,res){
         var id = req.params.id;
-        User.findOne({_id:id},function(err,userFound){
+        User.findById(id,function(err,userFound){
             if(err)
                 return res.send(err);
             
@@ -447,6 +448,76 @@ router.route("/admin/user/deactivate/:id")
             
         })
     })
+
+//retrieve and create 
+
+router.route("/admin/policy")
+    .get(function(req,res){
+        Policy.find(function(err,policies){
+            if (err)
+                return res.send(err);
+            if(policies == null){
+                return res.send({message: "policy does not exist"});
+            }
+            res.json(policies);
+        })
+    })
+    .post(function(req,res){
+        policy = new Policy();
+
+        policy.policy1 = req.body.policy1;
+        policy.policy2 = req.body.policy2;
+        policy.policy3 = req.body.policy3;
+
+        policy.save(function(err){
+            if(err)
+                return res.send(err);
+
+            return res.send({message:"Policy is created"});
+        })
+    })
+//update
+router.route("/admin/policy/:id")
+    .put(function(req,res){
+        var id = req.params.id;
+
+        var policy1 = req.body.policy1;
+        var policy2 = req.body.policy2;
+        var policy3 = req.body.policy3;
+
+
+        Policy.findById(id, function(err,foundPolicy){
+            if(policy1 == "" || policy1 ==null||policy1 == undefined){
+                
+                foundPolicy.policy1 = foundPolicy.policy1;
+            }
+            else{
+                foundPolicy.policy1 = policy1;
+            }
+            
+            if(policy2 == "" || policy2 ==null||policy2 == undefined){
+                
+                foundPolicy.policy2 = foundPolicy.policy2;
+            }
+            else{
+                foundPolicy.policy2 = policy2;
+            }
+            if(policy3 == "" || policy3 ==null||policy3 == undefined){
+                
+                foundPolicy.policy3 = foundPolicy.policy3;
+            }
+            else{
+                foundPolicy.policy3 = policy3;
+            }
+
+            foundPolicy.save(function(err){
+                if(err)
+                    return res.send(err);
+                return res.send({message: "Policy has been updated"});
+            })
+        })
+    })
+
 
 
 

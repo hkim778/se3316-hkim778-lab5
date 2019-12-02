@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let DmcaSchema = new Schema({
+let PolicySchema = new Schema({
 
     policy1: String,
     policy2: String,
@@ -10,4 +10,4 @@ let DmcaSchema = new Schema({
 
 })
 
-module.exports=mongoose.model('Dmca',DmcaSchema);
+module.exports=mongoose.model('Policy',PolicySchema);
