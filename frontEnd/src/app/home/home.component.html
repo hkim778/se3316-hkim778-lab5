@@ -123,6 +123,7 @@ Title: <input [(ngModel)]="name" placeholder="name of the title" >
     <li *ngFor = "let song of songs">
         <p class = "title">{{song.title}}</p>
         <p class = "artist">{{song.artist}}</p>
+        <p>{{average(song['review'],song['review'].length)}}Average Rating: {{avg}}</p>
         <button (click)="detailedView(song)">Get Information</button>
     </li>
 </ul>
