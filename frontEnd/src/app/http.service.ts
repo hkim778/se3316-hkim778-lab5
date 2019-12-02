@@ -72,6 +72,14 @@ export class HttpService {
     let url = this.url + "/admin/policy/"+id;
     return this.http.put(url,policies);
   }
+  getAllClaims(){
+    let url = this.url + "/admin/claim";
+    return this.http.get(url);
+  }
+  creatClaim(claim:object){
+    let url = this.url + "/admin/claim";
+    return this.http.post(url,claim);
+  }
 
 
 }

@@ -18,6 +18,7 @@ mongoose.connect('mongodb://root:root123@ds341557.mlab.com:41557/lab5',{useNewUr
 var Song = require("./app/models/song");
 var User = require("./app/models/user");
 var Policy = require("./app/models/policy");
+var Claim = require("./app/models/claim");
 
 //for email verification
 var nev = require("email-verification")(mongoose);
@@ -476,7 +477,7 @@ router.route("/admin/policy")
             return res.send({message:"Policy is created"});
         })
     })
-//update
+//update policy
 router.route("/admin/policy/:id")
     .put(function(req,res){
         var id = req.params.id;
@@ -517,6 +518,33 @@ router.route("/admin/policy/:id")
             })
         })
     })
+
+    //retrieve and create 
+
+router.route("/admin/claim")
+.get(function(req,res){
+    Claim.find(function(err,claims){
+        if (err)
+            return res.send(err);
+        if(claims == null){
+            return res.send({message: "claims do not exist"});
+        }
+        res.json(claims);
+    })
+})
+.post(function(req,res){
+    claim= new Claim();
+
+    claim.name = req.body.name;
+    claim.description = req.body.description;
+
+    claim.save(function(err){
+        if(err)
+            return res.send(err);
+
+        return res.send({message:"Claim is created"});
+    })
+})
 
 
 

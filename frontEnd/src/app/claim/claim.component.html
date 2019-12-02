@@ -1,0 +1,18 @@
+<h1>Claims</h1>
+<ol id = "claims" *ngIf = "claims" >
+
+        <div>
+            <li  *ngFor = "let claim of claims">
+                <p class = "name">{{claim.name}}</p>
+                <p class = "description">{{claim.description}}</p>
+            </li>
+        </div>
+</ol>
+
+<h1>Report Claims</h1>
+Name: <input [(ngModel)] = "name">
+<br>
+Description: <br>
+<textarea col = "100" rows="5" [(ngModel)]= "description" ></textarea>
+<br>
+<button (click)= "reportClaim()">Submit</button>

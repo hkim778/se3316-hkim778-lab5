@@ -13,6 +13,7 @@ import { NewAccountComponent } from './new-account/new-account.component';
 import { AuthenticatedComponent } from './authenticated/authenticated.component';
 import { AdminComponent } from './admin/admin.component';
 import { PolicyComponent } from './policy/policy.component';
+import { ClaimComponent } from './claim/claim.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { PolicyComponent } from './policy/policy.component';
     AuthenticatedComponent,
     AdminComponent,
     PolicyComponent,
+    ClaimComponent,
   ],
   imports: [
     BrowserModule,
