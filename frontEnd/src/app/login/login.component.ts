@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
         localStorage.admin = this.email;
         localStorage.username = "Site Manager";
         this.router.navigateByUrl("/admin");
+        
       }
       else if(message =="Account is deactivated. Contact the store manager")
       {

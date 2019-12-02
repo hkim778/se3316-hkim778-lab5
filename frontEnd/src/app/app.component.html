@@ -1,9 +1,13 @@
 <header>
   <div class="container">
     <a routerLink="/" class="logo">MusicApp</a>
+    <p *ngIf = admin>Access: Site Manager</p>
     <nav>
+
       <ul>
         <li><a href="#" routerLink="/">Home</a></li>
+        <li><a href = "#" routerLink ="/policy">Policy</a></li>
+        <li *ngIf = admin><a href="#" routerLink="/admin">Users</a></li>
 
       </ul>
     </nav>

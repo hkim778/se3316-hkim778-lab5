@@ -12,6 +12,8 @@ import { HidePasswordDirective } from './hide-password.directive';
 import { NewAccountComponent } from './new-account/new-account.component';
 import { AuthenticatedComponent } from './authenticated/authenticated.component';
 import { AdminComponent } from './admin/admin.component';
+import { PolicyComponent } from './policy/policy.component';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { AdminComponent } from './admin/admin.component';
     NewAccountComponent,
     AuthenticatedComponent,
     AdminComponent,
+    PolicyComponent,
   ],
   imports: [
     BrowserModule,

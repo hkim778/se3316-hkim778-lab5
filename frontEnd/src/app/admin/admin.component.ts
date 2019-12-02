@@ -11,9 +11,12 @@ export class AdminComponent implements OnInit {
 
   users: Object;
   activity:boolean;
+
+  reload: boolean;
   constructor(private http:HttpService, private router:Router) { }
 
   ngOnInit() {
+
     if(localStorage.admin == null)
     {
       this.router.navigateByUrl("/login");
@@ -22,8 +25,9 @@ export class AdminComponent implements OnInit {
     this.http.getAllUsers().subscribe(data=>{
       this.users = data;
     });
-
+    
     this.activity = true;
+
   }
 
   grantPrivilege(user: Object){

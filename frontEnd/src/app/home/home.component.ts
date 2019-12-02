@@ -120,6 +120,7 @@ export class HomeComponent implements OnInit {
     localStorage.clear();
     this.loggedIn = false;
     alert("Successfully Logged Out");
+    window.location.reload();
   }
 
   addReview(){
